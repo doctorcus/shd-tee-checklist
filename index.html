@@ -1,0 +1,421 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#007f8f" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="SHD TEE" />
+    <title>SHD TEE Checklist</title>
+    <link rel="manifest" href="manifest.webmanifest" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="brand">
+        <div class="mark" aria-hidden="true">
+          <svg viewBox="0 0 48 48" role="img">
+            <path d="M24 40s-14-8.6-14-20.4C10 13.4 14.1 9 19.6 9c3.1 0 5.1 1.5 6.4 3.3C27.3 10.5 29.3 9 32.4 9 37.9 9 42 13.4 42 19.6 42 31.4 24 40 24 40z" />
+            <path d="M8 26h8l3-7 5 14 4-10h12" />
+          </svg>
+        </div>
+        <div>
+          <h1>SHD TEE Checklist</h1>
+          <p>構造的心疾患インターベンションの経食道エコー確認リスト</p>
+        </div>
+      </div>
+      <div class="actions">
+        <button id="printBtn" class="icon-button" type="button" aria-label="印刷">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9V3h12v6M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2M6 14h12v7H6z"/></svg>
+        </button>
+        <button id="resetBtn" class="icon-button danger" type="button" aria-label="リセット">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7M3 3v6h6"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <main class="layout">
+      <aside class="sidebar" aria-label="進捗と根拠">
+        <section class="panel compact">
+          <h2>進捗</h2>
+          <div class="progress-ring" aria-live="polite">
+            <svg viewBox="0 0 120 120" aria-hidden="true">
+              <circle class="track" cx="60" cy="60" r="48"></circle>
+              <circle id="progressArc" class="arc" cx="60" cy="60" r="48"></circle>
+            </svg>
+            <div>
+              <strong id="progressText">0%</strong>
+              <span id="progressCount">0 / 0</span>
+            </div>
+          </div>
+        </section>
+        <section class="panel compact references">
+          <h2>根拠</h2>
+          <a href="https://www.asecho.org/guideline/tee-screening-for-structural-heart-intervention/" target="_blank" rel="noreferrer">ASE: SHD介入前TEE標準</a>
+          <a href="https://www.asecho.org/guideline/comprehensive-tee/" target="_blank" rel="noreferrer">ASE/SCA: 包括的TEE</a>
+          <a href="https://academic.oup.com/ehjcimaging/article/24/9/e209/7191468" target="_blank" rel="noreferrer">EACVI: SHD画像診断コンセンサス</a>
+          <a href="https://www.structuralheart.abbott/int/fileadmin/content/Solutions-Products/Mitraclip/MitraClip_G4_TEE_Echo_Acquisition_Guide_MAT-2004722_v2.0_OUS.pdf" target="_blank" rel="noreferrer">Abbott: MitraClip G4 TEE guide</a>
+          <a href="https://www.accessdata.fda.gov/cdrh_docs/pdf23/P230007C.pdf" target="_blank" rel="noreferrer">FDA: TriClip G4 IFU</a>
+          <a href="https://www.watchman.com/content/dam/watchman/downloads/download-center/watchman-flx-pro/WATCHMAN_FLX_Pro_Product_Brochure.pdf" target="_blank" rel="noreferrer">WATCHMAN FLX Pro sizing</a>
+          <a href="https://www.cardiovascular.abbott/int/en/hcp/products/structural-heart/structural-interventions/amplatzer-amulet.html" target="_blank" rel="noreferrer">Abbott: Amulet sizing</a>
+          <a href="https://eifu.edwards.com/eifu/5970f1a946e0fb00015e5f4c/DOC-0217257A_OM.pdf" target="_blank" rel="noreferrer">Edwards: SAPIEN 3 Ultra RESILIA</a>
+          <a href="https://www.medtronic.com/en-us/healthcare-professionals/products/cardiovascular/heart-valves/transcatheter-systems/evolut-fx-tavr-system.html" target="_blank" rel="noreferrer">Medtronic: Evolut FX sizing</a>
+          <a href="https://www.goremedical.com/node/784" target="_blank" rel="noreferrer">GORE: CARDIOFORM ASD sizing</a>
+        </section>
+      </aside>
+
+      <section class="workspace">
+        <section class="procedure-panel">
+          <div>
+            <h2>想定している治療</h2>
+            <p>最初に治療を選ぶと、チェックリストとTEERデバイス選択が切り替わります。</p>
+          </div>
+          <div id="procedureList" class="procedure-list"></div>
+        </section>
+
+        <section class="summary">
+          <div>
+            <label for="caseName">症例名</label>
+            <input id="caseName" type="text" placeholder="例: LAAO / MR-TEER / TAVR ..." />
+          </div>
+          <div>
+            <label for="operator">担当</label>
+            <input id="operator" type="text" placeholder="Echo / Intervention / Anesthesia" />
+          </div>
+          <div>
+            <label for="caseDate">日付</label>
+            <input id="caseDate" type="date" />
+          </div>
+        </section>
+
+        <div class="notice">
+          <strong>注意</strong>
+          施設プロトコル、使用デバイスのIFU、最新ガイドライン、ハートチーム判断を優先してください。このリストは臨床判断の代替ではありません。
+        </div>
+
+        <section id="teerPlanner" class="planner" aria-live="polite">
+          <div class="planner-head">
+            <div>
+              <h2 id="plannerTitle">デバイス選択</h2>
+              <p id="plannerIntro">数値と留置部位から、第一候補・代替候補・避けたい条件を表示します。最終判断はIFU、術者、ハートチームで確認してください。</p>
+            </div>
+            <span id="plannerDevice" class="device-pill">MitraClip G4</span>
+          </div>
+
+          <div id="mitralPlanner" class="planner-body">
+            <div class="form-grid">
+              <div>
+                <label for="mrEtiology">MR機序</label>
+                <select id="mrEtiology" data-plan-field="mrEtiology">
+                  <option value="primary">一次性 / degenerative</option>
+                  <option value="secondary">二次性 / functional</option>
+                </select>
+              </div>
+              <div>
+                <label for="mvTarget">留置部位</label>
+                <select id="mvTarget" data-plan-field="mvTarget">
+                  <option value="a2p2">A2-P2</option>
+                  <option value="a1p1">A1-P1</option>
+                  <option value="a3p3">A3-P3</option>
+                  <option value="commissure">交連近傍</option>
+                  <option value="cleft">cleft / perforation近傍</option>
+                </select>
+              </div>
+              <div>
+                <label for="mrLesion">病変タイプ</label>
+                <select id="mrLesion" data-plan-field="mrLesion">
+                  <option value="simple">central jet / simple</option>
+                  <option value="flail">flail / prolapse</option>
+                  <option value="wide">wide jet / multiple jet</option>
+                  <option value="tethering">tethering優位</option>
+                  <option value="calcified">石灰化・肥厚あり</option>
+                </select>
+              </div>
+              <div>
+                <label for="mrJetWidth">jet width mm</label>
+                <input id="mrJetWidth" data-plan-field="mrJetWidth" type="number" min="0" step="0.1" placeholder="3D color / TG SAX" />
+              </div>
+              <div>
+                <label for="anteriorLeaflet">前尖長 mm</label>
+                <input id="anteriorLeaflet" data-plan-field="anteriorLeaflet" type="number" min="0" step="0.1" placeholder="grasp部位" />
+              </div>
+              <div>
+                <label for="posteriorLeaflet">後尖長 mm</label>
+                <input id="posteriorLeaflet" data-plan-field="posteriorLeaflet" type="number" min="0" step="0.1" placeholder="grasp部位" />
+              </div>
+              <div>
+                <label for="leafletInsertion">想定insertion mm</label>
+                <input id="leafletInsertion" data-plan-field="leafletInsertion" type="number" min="0" step="0.1" placeholder="NT系>=6 / XT系>=9" />
+              </div>
+              <div>
+                <label for="coaptationDepth">coaptation depth mm</label>
+                <input id="coaptationDepth" data-plan-field="coaptationDepth" type="number" min="0" step="0.1" placeholder="二次性で重要" />
+              </div>
+              <div>
+                <label for="coaptationLength">coaptation length mm</label>
+                <input id="coaptationLength" data-plan-field="coaptationLength" type="number" min="0" step="0.1" placeholder="二次性で重要" />
+              </div>
+              <div>
+                <label for="flailGap">flail gap mm</label>
+                <input id="flailGap" data-plan-field="flailGap" type="number" min="0" step="0.1" placeholder="一次性で入力" />
+              </div>
+              <div>
+                <label for="flailWidth">flail width mm</label>
+                <input id="flailWidth" data-plan-field="flailWidth" type="number" min="0" step="0.1" placeholder="一次性で入力" />
+              </div>
+              <div>
+                <label for="mva">MVA cm2</label>
+                <input id="mva" data-plan-field="mva" type="number" min="0" step="0.1" placeholder="理想 >=4.0" />
+              </div>
+              <div>
+                <label for="mvGradient">平均MV圧較差 mmHg</label>
+                <input id="mvGradient" data-plan-field="mvGradient" type="number" min="0" step="0.1" placeholder="例: 2.5" />
+              </div>
+              <label class="checkline">
+                <input id="graspCalcification" data-plan-field="graspCalcification" type="checkbox" />
+                grasping zone石灰化あり
+              </label>
+              <label class="checkline">
+                <input id="contraMitral" data-plan-field="contraMitral" type="checkbox" />
+                血栓・活動性感染・リウマチ性MSなど
+              </label>
+            </div>
+          </div>
+
+          <div id="tricuspidPlanner" class="planner-body">
+            <div class="form-grid">
+              <div>
+                <label for="tvTarget">留置部位</label>
+                <select id="tvTarget" data-plan-field="tvTarget">
+                  <option value="as">前尖-中隔尖</option>
+                  <option value="ps">後尖-中隔尖</option>
+                  <option value="ap">前尖-後尖</option>
+                  <option value="central">central / multi-clip</option>
+                </select>
+              </div>
+              <div>
+                <label for="tvJet">TR jet位置</label>
+                <select id="tvJet" data-plan-field="tvJet">
+                  <option value="anteroseptal">anteroseptal / central</option>
+                  <option value="posteroseptal">posteroseptal</option>
+                  <option value="anteroposterior">anteroposterior / commissural</option>
+                </select>
+              </div>
+              <div>
+                <label for="tvMorphology">弁形態</label>
+                <select id="tvMorphology" data-plan-field="tvMorphology">
+                  <option value="trileaflet">trileaflet</option>
+                  <option value="quad">4尖以上 / complex</option>
+                  <option value="restricted">高度tethering / restriction</option>
+                </select>
+              </div>
+              <div>
+                <label for="tvGap">coaptation gap mm</label>
+                <input id="tvGap" data-plan-field="tvGap" type="number" min="0" step="0.1" placeholder="septo-lateral" />
+              </div>
+              <div>
+                <label for="tvLeafletLength">標的弁尖長 mm</label>
+                <input id="tvLeafletLength" data-plan-field="tvLeafletLength" type="number" min="0" step="0.1" placeholder="grasp部位" />
+              </div>
+              <div>
+                <label for="trVenaContracta">VC幅 mm</label>
+                <input id="trVenaContracta" data-plan-field="trVenaContracta" type="number" min="0" step="0.1" placeholder="TR jet幅" />
+              </div>
+              <div>
+                <label for="tvTethering">tethering height mm</label>
+                <input id="tvTethering" data-plan-field="tvTethering" type="number" min="0" step="0.1" placeholder="例: 7" />
+              </div>
+              <div>
+                <label for="tvGradient">平均TV圧較差 mmHg</label>
+                <input id="tvGradient" data-plan-field="tvGradient" type="number" min="0" step="0.1" placeholder="例: 1.5" />
+              </div>
+              <div>
+                <label for="pasp">PASP mmHg</label>
+                <input id="pasp" data-plan-field="pasp" type="number" min="0" step="1" placeholder="例: 45" />
+              </div>
+              <label class="checkline">
+                <input id="leadImpingement" data-plan-field="leadImpingement" type="checkbox" />
+                リードimpingement / adhesionあり
+              </label>
+              <label class="checkline">
+                <input id="poorTvImage" data-plan-field="poorTvImage" type="checkbox" />
+                TEE画像追跡が不十分
+              </label>
+            </div>
+          </div>
+
+          <div id="laaoPlanner" class="planner-body">
+            <div class="form-grid">
+              <div>
+                <label for="laaoDeviceFamily">デバイス</label>
+                <select id="laaoDeviceFamily" data-plan-field="laaoDeviceFamily">
+                  <option value="watchman">WATCHMAN FLX Pro</option>
+                  <option value="amulet">Amulet</option>
+                </select>
+              </div>
+              <div>
+                <label for="laaMaxOstium">最大ostium径 mm</label>
+                <input id="laaMaxOstium" data-plan-field="laaMaxOstium" type="number" min="0" step="0.1" placeholder="0/45/90/135最大" />
+              </div>
+              <div>
+                <label for="laaLanding">landing zone径 mm</label>
+                <input id="laaLanding" data-plan-field="laaLanding" type="number" min="0" step="0.1" placeholder="Amuletで重視" />
+              </div>
+              <div>
+                <label for="laaDepth">LAA depth mm</label>
+                <input id="laaDepth" data-plan-field="laaDepth" type="number" min="0" step="0.1" placeholder="使用デバイスに必要" />
+              </div>
+              <div>
+                <label for="laaMorphology">形態</label>
+                <select id="laaMorphology" data-plan-field="laaMorphology">
+                  <option value="single">single lobe / chicken wing以外</option>
+                  <option value="chicken">chicken wing / shallow bend</option>
+                  <option value="multi">multi-lobe</option>
+                  <option value="shallow">浅いLAA</option>
+                </select>
+              </div>
+              <label class="checkline">
+                <input id="laaThrombus" data-plan-field="laaThrombus" type="checkbox" />
+                LAA thrombus / sludgeあり
+              </label>
+              <label class="checkline">
+                <input id="laaRidgeConcern" data-plan-field="laaRidgeConcern" type="checkbox" />
+                ridge・LUPV・MV干渉懸念
+              </label>
+            </div>
+          </div>
+
+          <div id="tavrPlanner" class="planner-body">
+            <div class="form-grid">
+              <div>
+                <label for="tavrValveFamily">弁種</label>
+                <select id="tavrValveFamily" data-plan-field="tavrValveFamily">
+                  <option value="sapien">SAPIEN 3 Ultra RESILIA</option>
+                  <option value="evolut">Evolut FX / PRO+</option>
+                </select>
+              </div>
+              <div>
+                <label for="annulusArea">弁輪area mm2</label>
+                <input id="annulusArea" data-plan-field="annulusArea" type="number" min="0" step="1" placeholder="CT area" />
+              </div>
+              <div>
+                <label for="annulusDiameter">area-derived径 mm</label>
+                <input id="annulusDiameter" data-plan-field="annulusDiameter" type="number" min="0" step="0.1" placeholder="または平均径" />
+              </div>
+              <div>
+                <label for="annulusPerimeter">perimeter mm</label>
+                <input id="annulusPerimeter" data-plan-field="annulusPerimeter" type="number" min="0" step="0.1" placeholder="Evolutで有用" />
+              </div>
+              <div>
+                <label for="coronaryHeight">冠動脈高 mm</label>
+                <input id="coronaryHeight" data-plan-field="coronaryHeight" type="number" min="0" step="0.1" placeholder="低冠動脈に注意" />
+              </div>
+              <div>
+                <label for="sovDiameter">SOV径 mm</label>
+                <input id="sovDiameter" data-plan-field="sovDiameter" type="number" min="0" step="0.1" placeholder="Valsalva" />
+              </div>
+              <div>
+                <label for="avMorphology">弁形態</label>
+                <select id="avMorphology" data-plan-field="avMorphology">
+                  <option value="tricuspid">三尖AS</option>
+                  <option value="bicuspid">二尖弁</option>
+                  <option value="purear">pure AR</option>
+                  <option value="vinv">valve-in-valve</option>
+                </select>
+              </div>
+              <div>
+                <label for="lvotCalcium">LVOT/弁輪石灰化</label>
+                <select id="lvotCalcium" data-plan-field="lvotCalcium">
+                  <option value="none">なし/軽度</option>
+                  <option value="moderate">中等度</option>
+                  <option value="severe">高度・偏在</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div id="septalPlanner" class="planner-body">
+            <div class="form-grid">
+              <div>
+                <label for="septalType">閉鎖対象</label>
+                <select id="septalType" data-plan-field="septalType">
+                  <option value="pfo">PFO</option>
+                  <option value="asd">secundum ASD</option>
+                </select>
+              </div>
+              <div>
+                <label for="pfoTunnel">PFO tunnel長 mm</label>
+                <input id="pfoTunnel" data-plan-field="pfoTunnel" type="number" min="0" step="0.1" placeholder="PFOで入力" />
+              </div>
+              <div>
+                <label for="pfoSeparation">PFO separation mm</label>
+                <input id="pfoSeparation" data-plan-field="pfoSeparation" type="number" min="0" step="0.1" placeholder="PFO開大幅" />
+              </div>
+              <div>
+                <label for="asdDiameter">ASD径 / stop-flow径 mm</label>
+                <input id="asdDiameter" data-plan-field="asdDiameter" type="number" min="0" step="0.1" placeholder="ASDで入力" />
+              </div>
+              <div>
+                <label for="aorticRim">aortic rim mm</label>
+                <input id="aorticRim" data-plan-field="aorticRim" type="number" min="0" step="0.1" placeholder="欠損可" />
+              </div>
+              <div>
+                <label for="posteriorRim">posterior rim mm</label>
+                <input id="posteriorRim" data-plan-field="posteriorRim" type="number" min="0" step="0.1" placeholder=">=5が目安" />
+              </div>
+              <div>
+                <label for="ivcRim">IVC rim mm</label>
+                <input id="ivcRim" data-plan-field="ivcRim" type="number" min="0" step="0.1" placeholder=">=5が目安" />
+              </div>
+              <div>
+                <label for="shuntGrade">shunt / 欠損形態</label>
+                <select id="shuntGrade" data-plan-field="shuntGrade">
+                  <option value="small">small / single</option>
+                  <option value="large">large shunt</option>
+                  <option value="asa">ASAあり</option>
+                  <option value="multi">多孔性 / fenestrated</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="planner-results">
+            <div id="eligibilityCard" class="result-card">
+              <span class="result-label">留置可能性</span>
+              <strong id="eligibilityText">計測値を入力してください</strong>
+              <p id="eligibilityDetail">主要項目を入力すると、適応上の注意点を表示します。</p>
+            </div>
+            <div id="clipCard" class="result-card">
+              <span class="result-label">適切なデバイス</span>
+              <strong id="clipText">未判定</strong>
+              <p id="clipDetail">第一候補と代替候補を表示します。</p>
+            </div>
+          </div>
+
+          <div id="criteriaList" class="criteria-list"></div>
+        </section>
+
+        <nav class="tabs" aria-label="チェックリスト分類">
+          <button class="tab active" type="button" data-tab="all">すべて</button>
+          <button class="tab" type="button" data-tab="pre">術前評価</button>
+          <button class="tab" type="button" data-tab="intra">術中ガイド</button>
+          <button class="tab" type="button" data-tab="post">終了前確認</button>
+        </nav>
+
+        <section id="checklist" class="checklist" aria-live="polite"></section>
+      </section>
+    </main>
+
+    <template id="sectionTemplate">
+      <article class="check-section">
+        <button class="section-head" type="button">
+          <span></span>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+        </button>
+        <div class="items"></div>
+      </article>
+    </template>
+
+    <script src="app.js"></script>
+  </body>
+</html>

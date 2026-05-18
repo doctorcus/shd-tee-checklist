@@ -1,0 +1,18 @@
+{
+  "name": "SHD TEE Checklist",
+  "short_name": "SHD TEE",
+  "description": "SHD intervention TEE checklist and device sizing helper",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f4f7f8",
+  "theme_color": "#007f8f",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
