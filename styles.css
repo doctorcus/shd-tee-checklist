@@ -283,6 +283,33 @@ label {
   font-weight: 700;
 }
 
+label.with-help {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.help-button {
+  width: 22px;
+  height: 22px;
+  flex: 0 0 auto;
+  display: inline-grid;
+  place-items: center;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: #fff;
+  color: var(--accent-dark);
+  font-size: 0.78rem;
+  font-weight: 900;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.help-button:hover {
+  border-color: var(--accent);
+  background: #e9f8f8;
+}
+
 input,
 select,
 textarea {
@@ -478,6 +505,85 @@ button:focus-visible {
 
 .criterion.stop::before {
   background: #bd3e3e;
+}
+
+.help-dialog {
+  width: min(560px, calc(100vw - 28px));
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 0;
+  color: var(--ink);
+  background: #fff;
+  box-shadow: 0 24px 80px rgba(18, 28, 35, 0.24);
+}
+
+.help-dialog::backdrop {
+  background: rgba(13, 22, 28, 0.42);
+}
+
+.help-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--line);
+}
+
+.help-head h2 {
+  font-size: 1rem;
+}
+
+.help-figure {
+  padding: 16px 16px 10px;
+  background: #f8fbfc;
+}
+
+.help-figure svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.help-text {
+  padding: 0 16px 16px;
+  color: var(--muted);
+  line-height: 1.6;
+  font-size: 0.95rem;
+}
+
+.figure-line {
+  stroke: var(--accent-dark);
+  stroke-width: 4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  fill: none;
+}
+
+.figure-soft {
+  stroke: #8aa1ad;
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  fill: none;
+}
+
+.figure-fill {
+  fill: #dff4f5;
+  stroke: #6da5ad;
+  stroke-width: 3;
+}
+
+.figure-measure {
+  stroke: var(--warm);
+  stroke-width: 5;
+  stroke-linecap: round;
+}
+
+.figure-label {
+  fill: var(--ink);
+  font-size: 15px;
+  font-weight: 800;
 }
 
 .tabs {

@@ -137,6 +137,11 @@ const clipText = document.querySelector("#clipText");
 const clipDetail = document.querySelector("#clipDetail");
 const criteriaList = document.querySelector("#criteriaList");
 const caseFields = ["caseName", "operator", "caseDate"];
+const helpDialog = document.querySelector("#helpDialog");
+const helpTitle = document.querySelector("#helpTitle");
+const helpFigure = document.querySelector("#helpFigure");
+const helpText = document.querySelector("#helpText");
+const helpClose = document.querySelector("#helpClose");
 const clipDimensions = {
   NT: "NT: arm 9 mm / width 4 mm",
   NTW: "NTW: arm 9 mm / width 6 mm",
@@ -193,6 +198,39 @@ const goreAsdSizes = [
   { size: 44, min: 23, max: 30, sheath: "12 Fr" },
   { size: 48, min: 28, max: 35, sheath: "14 Fr" }
 ];
+
+const helpEntries = {
+  mrJetWidth: ["MR jet width", "color Dopplerで標的jetの幅を、leaflet接合線に近い位置で測ります。広いjetや複数jetではwide clipや複数clipを考えます。", "valveJet"],
+  anteriorLeaflet: ["前尖長", "grasp予定部位で、自由縁から弁尖基部方向へ使える長さを見ます。短いと把持量が不足します。", "leafletLength"],
+  posteriorLeaflet: ["後尖長", "grasp予定部位で、自由縁から弁尖基部方向へ使える長さを見ます。後尖が短い病変ではclip保持に注意します。", "leafletLength"],
+  leafletInsertion: ["leaflet insertion", "clip arm上に入る弁尖長の見込みです。NT/NTWはおおむね6 mm以上、XT/XTWは9 mm以上を目安にします。", "insertion"],
+  coaptationDepth: ["coaptation depth", "僧帽弁輪平面からcoaptation pointまでの深さです。二次性MRでtetheringが強いほど深くなります。", "coaptation"],
+  coaptationLength: ["coaptation length", "前尖と後尖が重なっている長さです。短いとgraspが難しくなります。", "coaptation"],
+  flailGap: ["flail gap", "flail leaflet先端と対側弁尖接合点までの距離です。gapが大きいとXT系や複数clipを考えます。", "flail"],
+  flailWidth: ["flail width", "flailしている幅をcommissure方向に測ります。幅が広いとwide clipや複数clipを検討します。", "flail"],
+  mva: ["MVA", "3D planimetryまたはPHTなどで僧帽弁口面積を確認します。小さい場合は術後MSリスクに注意します。", "orifice"],
+  mvGradient: ["平均MV圧較差", "PW/CW Dopplerで僧帽弁流入の平均圧較差を測ります。心拍数とflow依存性も一緒に確認します。", "doppler"],
+  tvGap: ["三尖弁coaptation gap", "主にsepto-lateral方向で、標的弁尖間の最大gapを測ります。gapが大きいほどT-TEERは難しくなります。", "tricuspidGap"],
+  tvLeafletLength: ["三尖弁尖長", "clipで把持する予定の弁尖で、自由縁から使える弁尖長を測ります。", "leafletLength"],
+  trVenaContracta: ["TR VC幅", "color DopplerでTR jetの最狭部を測ります。広いjetではwide clipや複数clipを検討します。", "valveJet"],
+  tvTethering: ["tethering height", "三尖弁輪平面からcoaptation pointまでの距離です。右室拡大やtetheringの強さを反映します。", "coaptation"],
+  tvGradient: ["平均TV圧較差", "三尖弁流入の平均圧較差です。clip後のTSリスクを見るために術前値を確認します。", "doppler"],
+  pasp: ["PASP", "TR jet velocityと右房圧から推定します。高度肺高血圧では治療適応とリスクを再確認します。", "doppler"],
+  laaMaxOstium: ["LAA ostium径", "0/45/90/135度など複数断面でLAA入口部を測り、最大径を使います。WATCHMANではostium径がサイズ選択の中心です。", "laa"],
+  laaLanding: ["LAA landing zone径", "Amuletではostiumより少し奥のlanding zoneを測ります。複数角度で最大径を確認します。", "laa"],
+  laaDepth: ["LAA depth", "ostiumまたはlanding zoneから主葉の奥までの深さです。浅いLAAではデバイスが収まるか注意します。", "laa"],
+  annulusArea: ["大動脈弁輪area", "CTのvirtual basal ringで面積を測ります。SAPIEN系ではarea sizingの中心になります。", "aorticAnnulus"],
+  annulusDiameter: ["area-derived径", "弁輪areaから換算した径、または平均径です。デバイスサイズ表と照合します。", "aorticAnnulus"],
+  annulusPerimeter: ["弁輪perimeter", "CTのvirtual basal ring周囲長です。Evolut系ではperimeter sizingも確認します。", "aorticAnnulus"],
+  coronaryHeight: ["冠動脈高", "弁輪平面から冠動脈入口部までの距離です。低い場合は冠閉塞リスクを評価します。", "coronary"],
+  sovDiameter: ["SOV径", "Valsalva洞の径です。小さい場合は冠閉塞やsinus sequestrationに注意します。", "coronary"],
+  pfoTunnel: ["PFO tunnel長", "右房側入口から左房側出口までのトンネル長です。長い場合は大きめdeviceを検討します。", "septum"],
+  pfoSeparation: ["PFO separation", "septum primumとsecundumの開大幅です。大きい場合はdevice選択に影響します。", "septum"],
+  asdDiameter: ["ASD径", "2D/3Dで最大径を測り、必要時stop-flow balloon径を使います。device waist選択の中心です。", "septum"],
+  aorticRim: ["aortic rim", "ASD辺縁から大動脈側までのrimです。欠損だけなら許容されることもありますがerosionに注意します。", "septum"],
+  posteriorRim: ["posterior rim", "ASD後壁側のrimです。短いとdevice安定性が低下します。", "septum"],
+  ivcRim: ["IVC rim", "下大静脈側のrimです。短い場合はdevice closureが不利になります。", "septum"]
+};
 
 function itemId(sectionTitle, itemTitle) {
   return `${sectionTitle}::${itemTitle}`;
@@ -318,6 +356,132 @@ function renderCriteria(criteria) {
     node.textContent = criterion.text;
     criteriaList.append(node);
   });
+}
+
+function diagram(type) {
+  const diagrams = {
+    leafletLength: `
+      <svg viewBox="0 0 360 210" role="img">
+        <path class="figure-soft" d="M70 150 Q120 60 175 124 Q235 56 292 150" />
+        <path class="figure-measure" d="M175 124 Q158 98 140 75" />
+        <path class="figure-measure" d="M175 124 Q198 98 220 75" />
+        <text class="figure-label" x="92" y="42">弁尖長</text>
+        <text class="figure-label" x="132" y="178">自由縁から使える長さ</text>
+      </svg>`,
+    insertion: `
+      <svg viewBox="0 0 360 210" role="img">
+        <path class="figure-soft" d="M68 80 Q122 138 174 112 Q228 138 292 80" />
+        <rect class="figure-fill" x="142" y="112" width="72" height="52" rx="8" />
+        <path class="figure-measure" d="M146 116 L174 132 M214 116 L186 132" />
+        <text class="figure-label" x="106" y="46">clip内に入る弁尖長</text>
+      </svg>`,
+    coaptation: `
+      <svg viewBox="0 0 360 210" role="img">
+        <path class="figure-soft" d="M70 56 H292" />
+        <path class="figure-soft" d="M80 160 Q140 80 178 132 Q220 84 282 160" />
+        <path class="figure-measure" d="M178 56 V132" />
+        <path class="figure-measure" d="M160 132 H196" />
+        <text class="figure-label" x="190" y="96">depth</text>
+        <text class="figure-label" x="133" y="156">length</text>
+      </svg>`,
+    flail: `
+      <svg viewBox="0 0 360 210" role="img">
+        <path class="figure-soft" d="M70 150 Q126 78 170 128 Q224 72 292 150" />
+        <path class="figure-soft" d="M170 128 Q150 86 128 42" />
+        <path class="figure-measure" d="M128 42 L168 126" />
+        <path class="figure-measure" d="M112 48 H172" />
+        <text class="figure-label" x="182" y="86">gap</text>
+        <text class="figure-label" x="102" y="28">width</text>
+      </svg>`,
+    valveJet: `
+      <svg viewBox="0 0 360 210" role="img">
+        <path class="figure-soft" d="M70 126 Q130 74 180 126 Q230 74 292 126" />
+        <path d="M160 132 C158 160 145 178 122 195 M178 132 C185 162 184 182 176 202 M196 132 C214 158 224 178 238 195" fill="none" stroke="#d96b35" stroke-width="10" stroke-linecap="round" opacity="0.75"/>
+        <path class="figure-measure" d="M151 126 H205" />
+        <text class="figure-label" x="126" y="54">color jetの幅</text>
+      </svg>`,
+    orifice: `
+      <svg viewBox="0 0 360 210" role="img">
+        <ellipse class="figure-fill" cx="180" cy="112" rx="92" ry="48" />
+        <ellipse cx="180" cy="112" rx="44" ry="20" fill="#fff" stroke="#d96b35" stroke-width="5" />
+        <text class="figure-label" x="126" y="178">3D en faceで弁口をtrace</text>
+      </svg>`,
+    doppler: `
+      <svg viewBox="0 0 360 210" role="img">
+        <path class="figure-soft" d="M62 160 H310 M80 34 V174" />
+        <path class="figure-line" d="M88 156 C122 150 120 60 156 64 C192 68 184 152 226 154 C262 156 260 88 296 92" />
+        <path class="figure-measure" d="M92 62 H302" />
+        <text class="figure-label" x="120" y="32">Doppler波形から測定</text>
+      </svg>`,
+    tricuspidGap: `
+      <svg viewBox="0 0 360 210" role="img">
+        <path class="figure-soft" d="M92 150 Q135 78 178 128 Q224 78 268 150" />
+        <path class="figure-measure" d="M164 126 H194" />
+        <text class="figure-label" x="112" y="58">弁尖間の最大gap</text>
+      </svg>`,
+    laa: `
+      <svg viewBox="0 0 360 210" role="img">
+        <path class="figure-soft" d="M82 118 C112 70 158 76 182 108 C214 64 276 74 300 132 C258 124 224 144 188 134 C144 154 108 142 82 118Z" />
+        <path class="figure-measure" d="M96 116 H184" />
+        <path class="figure-measure" d="M184 116 C224 116 260 130 286 132" />
+        <text class="figure-label" x="90" y="52">ostium / landing zone</text>
+        <text class="figure-label" x="210" y="174">depth</text>
+      </svg>`,
+    aorticAnnulus: `
+      <svg viewBox="0 0 360 210" role="img">
+        <ellipse class="figure-fill" cx="180" cy="112" rx="92" ry="58" />
+        <path class="figure-measure" d="M92 112 H268" />
+        <path class="figure-measure" d="M180 54 V170" />
+        <text class="figure-label" x="86" y="36">virtual basal ring</text>
+        <text class="figure-label" x="118" y="190">area / perimeter / derived径</text>
+      </svg>`,
+    coronary: `
+      <svg viewBox="0 0 360 210" role="img">
+        <path class="figure-soft" d="M92 148 H268 M120 148 C120 84 238 84 238 148" />
+        <circle class="figure-fill" cx="238" cy="84" r="12" />
+        <path class="figure-measure" d="M238 148 V84" />
+        <text class="figure-label" x="152" y="44">弁輪平面から冠入口部</text>
+      </svg>`,
+    septum: `
+      <svg viewBox="0 0 360 210" role="img">
+        <path class="figure-soft" d="M128 42 C168 82 170 128 130 170" />
+        <path class="figure-soft" d="M220 42 C184 82 184 130 224 170" />
+        <path class="figure-measure" d="M146 108 H206" />
+        <path class="figure-measure" d="M126 154 H224" />
+        <text class="figure-label" x="104" y="34">PFO/ASDの開大幅・径</text>
+        <text class="figure-label" x="86" y="190">周囲rimも同じ断面で確認</text>
+      </svg>`
+  };
+  return diagrams[type] || diagrams.valveJet;
+}
+
+function installMeasurementHelp() {
+  Object.entries(helpEntries).forEach(([fieldId, entry]) => {
+    const label = document.querySelector(`label[for="${fieldId}"]`);
+    if (!label || label.querySelector(".help-button")) return;
+    label.classList.add("with-help");
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "help-button";
+    button.textContent = "?";
+    button.setAttribute("aria-label", `${entry[0]}の測定位置`);
+    button.addEventListener("click", (event) => {
+      event.preventDefault();
+      openHelp(entry);
+    });
+    label.append(button);
+  });
+}
+
+function openHelp(entry) {
+  helpTitle.textContent = entry[0];
+  helpText.textContent = entry[1];
+  helpFigure.innerHTML = diagram(entry[2]);
+  if (typeof helpDialog.showModal === "function") {
+    helpDialog.showModal();
+  } else {
+    helpDialog.setAttribute("open", "");
+  }
 }
 
 function mitralAssessment() {
@@ -880,4 +1044,10 @@ document.querySelectorAll("[data-plan-field]").forEach((field) => {
   }
 });
 
+helpClose.addEventListener("click", () => helpDialog.close());
+helpDialog.addEventListener("click", (event) => {
+  if (event.target === helpDialog) helpDialog.close();
+});
+
+installMeasurementHelp();
 render();
