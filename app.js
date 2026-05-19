@@ -201,6 +201,8 @@ const goreAsdSizes = [
 
 const helpEntries = {
   mrJetWidth: ["MR jet width", "color Dopplerで標的jetの幅を、leaflet接合線に近い位置で測ります。広いjetや複数jetではwide clipや複数clipを考えます。", "valveJet"],
+  mvApDiameter: ["僧帽弁前後径", "3D en faceまたはMPRで僧帽弁輪の前後方向を測ります。弁口が小さい場合は術後MSリスクを意識します。", "mitralAnnulus"],
+  mvCommissuralDiameter: ["僧帽弁左右径", "3D en faceまたはMPRで交連間方向を測ります。wide clipや複数clipを置く余地の確認に使います。", "mitralAnnulus"],
   anteriorLeaflet: ["前尖長", "grasp予定部位で、自由縁から弁尖基部方向へ使える長さを見ます。短いと把持量が不足します。", "leafletLength"],
   posteriorLeaflet: ["後尖長", "grasp予定部位で、自由縁から弁尖基部方向へ使える長さを見ます。後尖が短い病変ではclip保持に注意します。", "leafletLength"],
   leafletInsertion: ["leaflet insertion", "clip arm上に入る弁尖長の見込みです。NT/NTWはおおむね6 mm以上、XT/XTWは9 mm以上を目安にします。", "insertion"],
@@ -406,6 +408,14 @@ function diagram(type) {
         <ellipse cx="180" cy="112" rx="44" ry="20" fill="#fff" stroke="#d96b35" stroke-width="5" />
         <text class="figure-label" x="126" y="178">3D en faceで弁口をtrace</text>
       </svg>`,
+    mitralAnnulus: `
+      <svg viewBox="0 0 360 210" role="img">
+        <ellipse class="figure-fill" cx="180" cy="112" rx="100" ry="58" />
+        <path class="figure-measure" d="M180 54 V170" />
+        <path class="figure-measure" d="M80 112 H280" />
+        <text class="figure-label" x="198" y="94">前後径</text>
+        <text class="figure-label" x="124" y="144">左右径</text>
+      </svg>`,
     doppler: `
       <svg viewBox="0 0 360 210" role="img">
         <path class="figure-soft" d="M62 160 H310 M80 34 V174" />
@@ -458,18 +468,25 @@ function diagram(type) {
 function installMeasurementHelp() {
   Object.entries(helpEntries).forEach(([fieldId, entry]) => {
     const label = document.querySelector(`label[for="${fieldId}"]`);
-    if (!label || label.querySelector(".help-button")) return;
+    if (!label) return;
+    if (label.parentElement.querySelector(`.inline-help[data-help-field="${fieldId}"]`)) return;
+    label.querySelector(".help-button")?.remove();
     label.classList.add("with-help");
-    const button = document.createElement("button");
-    button.type = "button";
-    button.className = "help-button";
-    button.textContent = "?";
-    button.setAttribute("aria-label", `${entry[0]}の測定位置`);
-    button.addEventListener("click", (event) => {
-      event.preventDefault();
-      openHelp(entry);
-    });
-    label.append(button);
+    const row = document.createElement("div");
+    row.className = "label-help-row";
+    label.before(row);
+    row.append(label);
+
+    const details = document.createElement("details");
+    details.className = "inline-help";
+    details.dataset.helpField = fieldId;
+    details.innerHTML = `
+      <summary aria-label="${entry[0]}の測定位置">?</summary>
+      <div class="inline-help-card text-only">
+        <p><strong>${entry[0]}</strong><br>${entry[1]}</p>
+      </div>
+    `;
+    row.append(details);
   });
 }
 
@@ -477,17 +494,30 @@ function openHelp(entry) {
   helpTitle.textContent = entry[0];
   helpText.textContent = entry[1];
   helpFigure.innerHTML = diagram(entry[2]);
-  if (typeof helpDialog.showModal === "function") {
-    helpDialog.showModal();
-  } else {
+  try {
+    if (typeof helpDialog.showModal === "function" && !helpDialog.open) {
+      helpDialog.showModal();
+      return;
+    }
+    helpDialog.setAttribute("open", "");
+  } catch {
     helpDialog.setAttribute("open", "");
   }
 }
+
+function openHelpByField(fieldId) {
+  const entry = helpEntries[fieldId];
+  if (entry) openHelp(entry);
+}
+
+window.openHelpByField = openHelpByField;
 
 function mitralAssessment() {
   const etiology = fieldValue("mrEtiology", "primary");
   const target = fieldValue("mvTarget", "a2p2");
   const lesion = fieldValue("mrLesion", "simple");
+  const mvApDiameter = numericValue("mvApDiameter");
+  const mvCommissuralDiameter = numericValue("mvCommissuralDiameter");
   const anteriorLeaflet = numericValue("anteriorLeaflet");
   const posteriorLeaflet = numericValue("posteriorLeaflet");
   const insertion = numericValue("leafletInsertion");
@@ -511,6 +541,16 @@ function mitralAssessment() {
   if (target === "cleft") addCriterion(criteria, "stop", "cleft / perforation近傍は標準TEERとしては不利。");
   if (lesion === "calcified") addCriterion(criteria, "caution", "石灰化・肥厚病変: grasping zoneとSLDAリスクを重点確認。");
   if (lesion === "wide") addCriterion(criteria, "caution", "wide / multiple jet: wide clipまたは複数clip戦略を検討。");
+
+  if (mvApDiameter !== null) {
+    if (mvApDiameter < 25) addCriterion(criteria, "caution", "僧帽弁前後径 <25 mm: 弁口が小さめで術後MSリスクに注意。");
+    else addCriterion(criteria, "good", "僧帽弁前後径は極端に小さくない。");
+  }
+
+  if (mvCommissuralDiameter !== null) {
+    if (mvCommissuralDiameter < 30) addCriterion(criteria, "caution", "僧帽弁左右径 <30 mm: wide clipや複数clipの余地を慎重に確認。");
+    else addCriterion(criteria, "good", "僧帽弁左右径はclip配置の余地を評価しやすい。");
+  }
 
   if (anteriorLeaflet !== null) {
     if (anteriorLeaflet < 7) addCriterion(criteria, "stop", "前尖長 <7 mm: grasp不十分の懸念が強い。");
@@ -571,13 +611,28 @@ function mitralAssessment() {
   }
 
   const status = worstStatus(criteria);
-  const clip = mitralClipSuggestion({ insertion, flailGap, flailWidth, jetWidth, mva, gradient, target, lesion, calcification });
+  const clip = mitralClipSuggestion({
+    insertion,
+    flailGap,
+    flailWidth,
+    jetWidth,
+    mvApDiameter,
+    mvCommissuralDiameter,
+    mva,
+    gradient,
+    target,
+    lesion,
+    calcification
+  });
   return { status, criteria, clip };
 }
 
 function mitralClipSuggestion(values) {
   const insertion = values.insertion;
   const stenosisConcern = (values.mva !== null && values.mva < 4) || (values.gradient !== null && values.gradient >= 4);
+  const smallAnnulus =
+    (values.mvApDiameter !== null && values.mvApDiameter < 25) ||
+    (values.mvCommissuralDiameter !== null && values.mvCommissuralDiameter < 30);
   const broadTarget =
     values.lesion === "wide" ||
     (values.jetWidth !== null && values.jetWidth > 10) ||
@@ -599,7 +654,7 @@ function mitralClipSuggestion(values) {
   const longClips = insertion === null || insertion >= 9 ? ["XT", "XTW"] : [];
   let candidates = largeGap ? longClips : shortClips.concat(longClips);
   if (broadTarget && !stenosisConcern) candidates = candidates.filter((clip) => clip.endsWith("W"));
-  if (stenosisConcern) candidates = candidates.filter((clip) => !clip.endsWith("W"));
+  if (stenosisConcern || smallAnnulus) candidates = candidates.filter((clip) => !clip.endsWith("W"));
   if (!candidates.length) candidates = insertion !== null && insertion < 9 ? shortClips : ["NT", "XT"];
 
   const unique = [...new Set(candidates)];
@@ -609,6 +664,7 @@ function mitralClipSuggestion(values) {
   if (largeGap) notes.push("flail/prolapse gapが大きい場合はXT系が候補。");
   if (broadTarget && !stenosisConcern) notes.push("幅広いjetや広いflailではNTW/XTWを検討。");
   if (stenosisConcern) notes.push("MVA/圧較差からwide clipや複数clipは慎重に。");
+  if (smallAnnulus) notes.push("僧帽弁径が小さめのためwide clipや複数clipは慎重に。");
   if (values.calcification) notes.push("石灰化部位を避け、leaflet insertionを再確認。");
   if (complexTarget) notes.push("複雑部位のため、候補は術中画像で上書き。");
 
@@ -937,6 +993,8 @@ function renderPlanner() {
         "anteriorLeaflet",
         "leafletInsertion",
         "mrJetWidth",
+        "mvApDiameter",
+        "mvCommissuralDiameter",
         "coaptationLength",
         "coaptationDepth",
         "flailGap",
@@ -1042,6 +1100,14 @@ document.querySelectorAll("[data-plan-field]").forEach((field) => {
     field.addEventListener("input", saveField);
     field.addEventListener("change", saveField);
   }
+});
+
+document.addEventListener("click", (event) => {
+  const button = event.target.closest?.(".help-button");
+  if (!button) return;
+  event.preventDefault();
+  event.stopPropagation();
+  openHelpByField(button.dataset.helpField);
 });
 
 helpClose.addEventListener("click", () => helpDialog.close());
