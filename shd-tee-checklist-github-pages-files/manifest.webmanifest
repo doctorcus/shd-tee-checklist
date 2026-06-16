@@ -1,7 +1,7 @@
 {
-  "name": "SHD TEE Checklist",
-  "short_name": "SHD TEE",
-  "description": "SHD intervention TEE checklist and device sizing helper",
+  "name": "MR TEER TEE Checklist",
+  "short_name": "MR TEER",
+  "description": "Mitral regurgitation TEER TEE checklist and MitraClip sizing helper",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",

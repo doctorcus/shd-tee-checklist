@@ -1,6 +1,6 @@
-# SHD TEE Checklist
+# MR TEER TEE Checklist
 
-Structural heart disease intervention TEE checklist and device sizing helper.
+Mitral regurgitation TEER TEE checklist and MitraClip sizing helper.
 
 This is a static PWA-ready app. It can be hosted on GitHub Pages or an internal web server.
 
@@ -16,4 +16,3 @@ This is a static PWA-ready app. It can be hosted on GitHub Pages or an internal 
 ## GitHub Pages
 
 Publish from the repository root on the `main` branch.
-

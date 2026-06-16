@@ -1,4 +1,4 @@
-const CACHE_NAME = "shd-tee-checklist-v1";
+const CACHE_NAME = "mr-teer-tee-checklist-v9";
 const ASSETS = ["./", "./index.html", "./styles.css", "./app.js", "./manifest.webmanifest", "./icon.svg"];
 
 self.addEventListener("install", (event) => {

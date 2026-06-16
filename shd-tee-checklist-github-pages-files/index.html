@@ -6,7 +6,7 @@
     <meta name="theme-color" content="#007f8f" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-title" content="SHD TEE" />
-    <title>SHD TEE Checklist</title>
+    <title>MR TEER TEE Checklist</title>
     <link rel="manifest" href="manifest.webmanifest" />
     <link rel="stylesheet" href="styles.css" />
   </head>
@@ -20,8 +20,8 @@
           </svg>
         </div>
         <div>
-          <h1>SHD TEE Checklist</h1>
-          <p>構造的心疾患インターベンションの経食道エコー確認リスト</p>
+          <h1>MR TEER TEE Checklist</h1>
+          <p>僧帽弁TEERの経食道エコー確認リスト</p>
         </div>
       </div>
       <div class="actions">
@@ -53,22 +53,15 @@
           <h2>根拠</h2>
           <a href="https://www.asecho.org/guideline/tee-screening-for-structural-heart-intervention/" target="_blank" rel="noreferrer">ASE: SHD介入前TEE標準</a>
           <a href="https://www.asecho.org/guideline/comprehensive-tee/" target="_blank" rel="noreferrer">ASE/SCA: 包括的TEE</a>
-          <a href="https://academic.oup.com/ehjcimaging/article/24/9/e209/7191468" target="_blank" rel="noreferrer">EACVI: SHD画像診断コンセンサス</a>
           <a href="https://www.structuralheart.abbott/int/fileadmin/content/Solutions-Products/Mitraclip/MitraClip_G4_TEE_Echo_Acquisition_Guide_MAT-2004722_v2.0_OUS.pdf" target="_blank" rel="noreferrer">Abbott: MitraClip G4 TEE guide</a>
-          <a href="https://www.accessdata.fda.gov/cdrh_docs/pdf23/P230007C.pdf" target="_blank" rel="noreferrer">FDA: TriClip G4 IFU</a>
-          <a href="https://www.watchman.com/content/dam/watchman/downloads/download-center/watchman-flx-pro/WATCHMAN_FLX_Pro_Product_Brochure.pdf" target="_blank" rel="noreferrer">WATCHMAN FLX Pro sizing</a>
-          <a href="https://www.cardiovascular.abbott/int/en/hcp/products/structural-heart/structural-interventions/amplatzer-amulet.html" target="_blank" rel="noreferrer">Abbott: Amulet sizing</a>
-          <a href="https://eifu.edwards.com/eifu/5970f1a946e0fb00015e5f4c/DOC-0217257A_OM.pdf" target="_blank" rel="noreferrer">Edwards: SAPIEN 3 Ultra RESILIA</a>
-          <a href="https://www.medtronic.com/en-us/healthcare-professionals/products/cardiovascular/heart-valves/transcatheter-systems/evolut-fx-tavr-system.html" target="_blank" rel="noreferrer">Medtronic: Evolut FX sizing</a>
-          <a href="https://www.goremedical.com/node/784" target="_blank" rel="noreferrer">GORE: CARDIOFORM ASD sizing</a>
         </section>
       </aside>
 
       <section class="workspace">
         <section class="procedure-panel">
           <div>
-            <h2>想定している治療</h2>
-            <p>最初に治療を選ぶと、チェックリストとTEERデバイス選択が切り替わります。</p>
+            <h2>対象治療</h2>
+            <p>MRに対する僧帽弁TEERに特化したチェックリストです。</p>
           </div>
           <div id="procedureList" class="procedure-list"></div>
         </section>
@@ -76,7 +69,7 @@
         <section class="summary">
           <div>
             <label for="caseName">症例名</label>
-            <input id="caseName" type="text" placeholder="例: LAAO / MR-TEER / TAVR ..." />
+            <input id="caseName" type="text" placeholder="例: MR-TEER / A2-P2 / functional MR ..." />
           </div>
           <div>
             <label for="operator">担当</label>
@@ -132,43 +125,51 @@
                 </select>
               </div>
               <div>
-                <label for="mrJetWidth">jet width mm</label>
+                <label for="mrJetWidth" class="with-help">jet width mm <button class="help-button" type="button" data-help-field="mrJetWidth" onclick="openHelpByField('mrJetWidth'); return false;" aria-label="MR jet widthの測定位置">?</button></label>
                 <input id="mrJetWidth" data-plan-field="mrJetWidth" type="number" min="0" step="0.1" placeholder="3D color / TG SAX" />
               </div>
               <div>
-                <label for="anteriorLeaflet">前尖長 mm</label>
+                <label for="mvApDiameter" class="with-help">僧帽弁前後径 mm <button class="help-button" type="button" data-help-field="mvApDiameter" onclick="openHelpByField('mvApDiameter'); return false;" aria-label="僧帽弁前後径の測定位置">?</button></label>
+                <input id="mvApDiameter" data-plan-field="mvApDiameter" type="number" min="0" step="0.1" placeholder="A-P径" />
+              </div>
+              <div>
+                <label for="mvCommissuralDiameter" class="with-help">僧帽弁左右径 mm <button class="help-button" type="button" data-help-field="mvCommissuralDiameter" onclick="openHelpByField('mvCommissuralDiameter'); return false;" aria-label="僧帽弁左右径の測定位置">?</button></label>
+                <input id="mvCommissuralDiameter" data-plan-field="mvCommissuralDiameter" type="number" min="0" step="0.1" placeholder="commissure間" />
+              </div>
+              <div>
+                <label for="anteriorLeaflet" class="with-help">前尖長 mm <button class="help-button" type="button" data-help-field="anteriorLeaflet" onclick="openHelpByField('anteriorLeaflet'); return false;" aria-label="前尖長の測定位置">?</button></label>
                 <input id="anteriorLeaflet" data-plan-field="anteriorLeaflet" type="number" min="0" step="0.1" placeholder="grasp部位" />
               </div>
               <div>
-                <label for="posteriorLeaflet">後尖長 mm</label>
+                <label for="posteriorLeaflet" class="with-help">後尖長 mm <button class="help-button" type="button" data-help-field="posteriorLeaflet" onclick="openHelpByField('posteriorLeaflet'); return false;" aria-label="後尖長の測定位置">?</button></label>
                 <input id="posteriorLeaflet" data-plan-field="posteriorLeaflet" type="number" min="0" step="0.1" placeholder="grasp部位" />
               </div>
               <div>
-                <label for="leafletInsertion">想定insertion mm</label>
+                <label for="leafletInsertion" class="with-help">想定insertion mm <button class="help-button" type="button" data-help-field="leafletInsertion" onclick="openHelpByField('leafletInsertion'); return false;" aria-label="leaflet insertionの測定位置">?</button></label>
                 <input id="leafletInsertion" data-plan-field="leafletInsertion" type="number" min="0" step="0.1" placeholder="NT系>=6 / XT系>=9" />
               </div>
               <div>
-                <label for="coaptationDepth">coaptation depth mm</label>
+                <label for="coaptationDepth" class="with-help">coaptation depth mm <button class="help-button" type="button" data-help-field="coaptationDepth" onclick="openHelpByField('coaptationDepth'); return false;" aria-label="coaptation depthの測定位置">?</button></label>
                 <input id="coaptationDepth" data-plan-field="coaptationDepth" type="number" min="0" step="0.1" placeholder="二次性で重要" />
               </div>
               <div>
-                <label for="coaptationLength">coaptation length mm</label>
+                <label for="coaptationLength" class="with-help">coaptation length mm <button class="help-button" type="button" data-help-field="coaptationLength" onclick="openHelpByField('coaptationLength'); return false;" aria-label="coaptation lengthの測定位置">?</button></label>
                 <input id="coaptationLength" data-plan-field="coaptationLength" type="number" min="0" step="0.1" placeholder="二次性で重要" />
               </div>
               <div>
-                <label for="flailGap">flail gap mm</label>
+                <label for="flailGap" class="with-help">flail gap mm <button class="help-button" type="button" data-help-field="flailGap" onclick="openHelpByField('flailGap'); return false;" aria-label="flail gapの測定位置">?</button></label>
                 <input id="flailGap" data-plan-field="flailGap" type="number" min="0" step="0.1" placeholder="一次性で入力" />
               </div>
               <div>
-                <label for="flailWidth">flail width mm</label>
+                <label for="flailWidth" class="with-help">flail width mm <button class="help-button" type="button" data-help-field="flailWidth" onclick="openHelpByField('flailWidth'); return false;" aria-label="flail widthの測定位置">?</button></label>
                 <input id="flailWidth" data-plan-field="flailWidth" type="number" min="0" step="0.1" placeholder="一次性で入力" />
               </div>
               <div>
-                <label for="mva">MVA cm2</label>
+                <label for="mva" class="with-help">MVA cm2 <button class="help-button" type="button" data-help-field="mva" onclick="openHelpByField('mva'); return false;" aria-label="MVAの測定位置">?</button></label>
                 <input id="mva" data-plan-field="mva" type="number" min="0" step="0.1" placeholder="理想 >=4.0" />
               </div>
               <div>
-                <label for="mvGradient">平均MV圧較差 mmHg</label>
+                <label for="mvGradient" class="with-help">平均MV圧較差 mmHg <button class="help-button" type="button" data-help-field="mvGradient" onclick="openHelpByField('mvGradient'); return false;" aria-label="平均MV圧較差の測定位置">?</button></label>
                 <input id="mvGradient" data-plan-field="mvGradient" type="number" min="0" step="0.1" placeholder="例: 2.5" />
               </div>
               <label class="checkline">
@@ -182,7 +183,7 @@
             </div>
           </div>
 
-          <div id="tricuspidPlanner" class="planner-body">
+          <div id="tricuspidPlanner" class="planner-body" hidden>
             <div class="form-grid">
               <div>
                 <label for="tvTarget">留置部位</label>
@@ -244,7 +245,7 @@
             </div>
           </div>
 
-          <div id="laaoPlanner" class="planner-body">
+          <div id="laaoPlanner" class="planner-body" hidden>
             <div class="form-grid">
               <div>
                 <label for="laaoDeviceFamily">デバイス</label>
@@ -285,7 +286,7 @@
             </div>
           </div>
 
-          <div id="tavrPlanner" class="planner-body">
+          <div id="tavrPlanner" class="planner-body" hidden>
             <div class="form-grid">
               <div>
                 <label for="tavrValveFamily">弁種</label>
@@ -334,7 +335,7 @@
             </div>
           </div>
 
-          <div id="septalPlanner" class="planner-body">
+          <div id="septalPlanner" class="planner-body" hidden>
             <div class="form-grid">
               <div>
                 <label for="septalType">閉鎖対象</label>
@@ -415,6 +416,17 @@
         <div class="items"></div>
       </article>
     </template>
+
+    <dialog id="helpDialog" class="help-dialog" aria-labelledby="helpTitle">
+      <div class="help-head">
+        <h2 id="helpTitle">測定ヘルプ</h2>
+        <button id="helpClose" class="icon-button" type="button" aria-label="閉じる">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>
+        </button>
+      </div>
+      <div id="helpFigure" class="help-figure"></div>
+      <p id="helpText" class="help-text"></p>
+    </dialog>
 
     <script src="app.js"></script>
   </body>
