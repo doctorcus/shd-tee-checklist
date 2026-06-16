@@ -6,7 +6,7 @@
     <meta name="theme-color" content="#007f8f" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-title" content="SHD TEE" />
-    <title>SHD TEE Checklist</title>
+    <title>MR TEER TEE Checklist</title>
     <link rel="manifest" href="manifest.webmanifest" />
     <link rel="stylesheet" href="styles.css" />
   </head>
@@ -20,8 +20,8 @@
           </svg>
         </div>
         <div>
-          <h1>SHD TEE Checklist</h1>
-          <p>構造的心疾患インターベンションの経食道エコー確認リスト</p>
+          <h1>MR TEER TEE Checklist</h1>
+          <p>僧帽弁TEERの経食道エコー確認リスト</p>
         </div>
       </div>
       <div class="actions">
@@ -53,22 +53,15 @@
           <h2>根拠</h2>
           <a href="https://www.asecho.org/guideline/tee-screening-for-structural-heart-intervention/" target="_blank" rel="noreferrer">ASE: SHD介入前TEE標準</a>
           <a href="https://www.asecho.org/guideline/comprehensive-tee/" target="_blank" rel="noreferrer">ASE/SCA: 包括的TEE</a>
-          <a href="https://academic.oup.com/ehjcimaging/article/24/9/e209/7191468" target="_blank" rel="noreferrer">EACVI: SHD画像診断コンセンサス</a>
           <a href="https://www.structuralheart.abbott/int/fileadmin/content/Solutions-Products/Mitraclip/MitraClip_G4_TEE_Echo_Acquisition_Guide_MAT-2004722_v2.0_OUS.pdf" target="_blank" rel="noreferrer">Abbott: MitraClip G4 TEE guide</a>
-          <a href="https://www.accessdata.fda.gov/cdrh_docs/pdf23/P230007C.pdf" target="_blank" rel="noreferrer">FDA: TriClip G4 IFU</a>
-          <a href="https://www.watchman.com/content/dam/watchman/downloads/download-center/watchman-flx-pro/WATCHMAN_FLX_Pro_Product_Brochure.pdf" target="_blank" rel="noreferrer">WATCHMAN FLX Pro sizing</a>
-          <a href="https://www.cardiovascular.abbott/int/en/hcp/products/structural-heart/structural-interventions/amplatzer-amulet.html" target="_blank" rel="noreferrer">Abbott: Amulet sizing</a>
-          <a href="https://eifu.edwards.com/eifu/5970f1a946e0fb00015e5f4c/DOC-0217257A_OM.pdf" target="_blank" rel="noreferrer">Edwards: SAPIEN 3 Ultra RESILIA</a>
-          <a href="https://www.medtronic.com/en-us/healthcare-professionals/products/cardiovascular/heart-valves/transcatheter-systems/evolut-fx-tavr-system.html" target="_blank" rel="noreferrer">Medtronic: Evolut FX sizing</a>
-          <a href="https://www.goremedical.com/node/784" target="_blank" rel="noreferrer">GORE: CARDIOFORM ASD sizing</a>
         </section>
       </aside>
 
       <section class="workspace">
         <section class="procedure-panel">
           <div>
-            <h2>想定している治療</h2>
-            <p>最初に治療を選ぶと、チェックリストとTEERデバイス選択が切り替わります。</p>
+            <h2>対象治療</h2>
+            <p>MRに対する僧帽弁TEERに特化したチェックリストです。</p>
           </div>
           <div id="procedureList" class="procedure-list"></div>
         </section>
@@ -76,7 +69,7 @@
         <section class="summary">
           <div>
             <label for="caseName">症例名</label>
-            <input id="caseName" type="text" placeholder="例: LAAO / MR-TEER / TAVR ..." />
+            <input id="caseName" type="text" placeholder="例: MR-TEER / A2-P2 / functional MR ..." />
           </div>
           <div>
             <label for="operator">担当</label>
@@ -108,6 +101,8 @@
                 <label for="mrEtiology">MR機序</label>
                 <select id="mrEtiology" data-plan-field="mrEtiology">
                   <option value="primary">一次性 / degenerative</option>
+                  <option value="vfmr">VFMR / ventricular functional</option>
+                  <option value="afmr">AFMR / atrial functional</option>
                   <option value="secondary">二次性 / functional</option>
                 </select>
               </div>
@@ -132,43 +127,139 @@
                 </select>
               </div>
               <div>
-                <label for="mrJetWidth">jet width mm</label>
+                <label for="laFossaPattern">左房・fossa所見</label>
+                <select id="laFossaPattern" data-plan-field="laFossaPattern">
+                  <option value="standard">標準的</option>
+                  <option value="largeLa">巨大左房 / AFMR疑い</option>
+                  <option value="anteriorFossa">fossa前付き</option>
+                  <option value="lowFossa">fossa低位</option>
+                  <option value="aneurysmalSeptum">IAS瘤状 / floppy</option>
+                </select>
+              </div>
+              <div>
+                <div class="label-help-row">
+                  <label for="fossaAnnulus2d" class="with-help">fossa-M弁輪距離 2D cm</label>
+                  <details class="inline-help" data-help-field="fossaAnnulus2d"><summary aria-label="fossaからM弁輪までの2D距離">?</summary><div class="inline-help-card text-only"><p><strong>fossa-M弁輪距離 2D</strong><br>ME bicavalでtenting位置を決め、orthogonal viewで僧帽弁輪平面までの高さをcmで見ます。TEERではmmではなくcm単位で扱います。</p></div></details>
+                </div>
+                <input id="fossaAnnulus2d" data-plan-field="fossaAnnulus2d" type="number" min="0" step="0.1" placeholder="例: 4.0" />
+              </div>
+              <div>
+                <div class="label-help-row">
+                  <label for="fossaAnnulus3d" class="with-help">fossa-M弁輪距離 3D cm</label>
+                  <details class="inline-help" data-help-field="fossaAnnulus3d"><summary aria-label="fossaからM弁輪までの3D距離">?</summary><div class="inline-help-card text-only"><p><strong>fossa-M弁輪距離 3D</strong><br>3D/MPRでtenting点から僧帽弁輪平面までの距離を確認します。2Dと差がある場合は3Dで前後・上下方向を再確認します。</p></div></details>
+                </div>
+                <input id="fossaAnnulus3d" data-plan-field="fossaAnnulus3d" type="number" min="0" step="0.1" placeholder="MPR推奨" />
+              </div>
+              <div>
+                <div class="label-help-row">
+                  <label for="fossaLeaflet2d" class="with-help">fossa-弁尖距離 2D cm</label>
+                  <details class="inline-help" data-help-field="fossaLeaflet2d"><summary aria-label="fossaから弁尖までの2D距離">?</summary><div class="inline-help-card text-only"><p><strong>fossa-弁尖距離 2D</strong><br>tenting点から標的coaptation/弁尖把持部位までの作業距離をcmで見ます。VFMRでは3.5 cm以上をひとつの目安にします。</p></div></details>
+                </div>
+                <input id="fossaLeaflet2d" data-plan-field="fossaLeaflet2d" type="number" min="0" step="0.1" placeholder="VFMR目安 >=3.5" />
+              </div>
+              <div>
+                <div class="label-help-row">
+                  <label for="fossaLeaflet3d" class="with-help">fossa-弁尖距離 3D cm</label>
+                  <details class="inline-help" data-help-field="fossaLeaflet3d"><summary aria-label="fossaから弁尖までの3D距離">?</summary><div class="inline-help-card text-only"><p><strong>fossa-弁尖距離 3D</strong><br>3D/MPRでtenting点から標的弁尖までの距離と軸を確認します。弁尖まで3.5 cm未満ではsteering余裕が少ない可能性があります。</p></div></details>
+                </div>
+                <input id="fossaLeaflet3d" data-plan-field="fossaLeaflet3d" type="number" min="0" step="0.1" placeholder="MPR推奨" />
+              </div>
+              <div>
+                <div class="label-help-row">
+                  <label for="mrJetWidth" class="with-help">jet width mm</label>
+                  <details class="inline-help" data-help-field="mrJetWidth"><summary aria-label="MR jet widthの測定位置">?</summary><div class="inline-help-card text-only"><p><strong>MR jet width</strong><br>color Dopplerで標的jetの幅を、leaflet接合線に近い位置で測ります。広いjetや複数jetではwide clipや複数clipを考えます。</p></div></details>
+                </div>
                 <input id="mrJetWidth" data-plan-field="mrJetWidth" type="number" min="0" step="0.1" placeholder="3D color / TG SAX" />
               </div>
               <div>
-                <label for="anteriorLeaflet">前尖長 mm</label>
+                <div class="label-help-row">
+                  <label for="mvApDiameter" class="with-help">僧帽弁前後径 mm</label>
+                  <details class="inline-help" data-help-field="mvApDiameter"><summary aria-label="僧帽弁前後径の測定位置">?</summary><div class="inline-help-card text-only"><p><strong>僧帽弁前後径</strong><br>3D en faceまたはMPRで僧帽弁輪の前後方向を測ります。弁口が小さい場合は術後MSリスクを意識します。</p></div></details>
+                </div>
+                <input id="mvApDiameter" data-plan-field="mvApDiameter" type="number" min="0" step="0.1" placeholder="A-P径" />
+              </div>
+              <div>
+                <div class="label-help-row">
+                  <label for="mvCommissuralDiameter" class="with-help">僧帽弁左右径 mm</label>
+                  <details class="inline-help" data-help-field="mvCommissuralDiameter"><summary aria-label="僧帽弁左右径の測定位置">?</summary><div class="inline-help-card text-only"><p><strong>僧帽弁左右径</strong><br>3D en faceまたはMPRで交連間方向を測ります。wide clipや複数clipを置く余地の確認に使います。</p></div></details>
+                </div>
+                <input id="mvCommissuralDiameter" data-plan-field="mvCommissuralDiameter" type="number" min="0" step="0.1" placeholder="commissure間" />
+              </div>
+              <div>
+                <div class="label-help-row">
+                  <label for="anteriorLeaflet" class="with-help">前尖長 mm</label>
+                  <details class="inline-help" data-help-field="anteriorLeaflet"><summary aria-label="前尖長の測定位置">?</summary><div class="inline-help-card text-only"><p><strong>前尖長</strong><br>grasp予定部位で、自由縁から弁尖基部方向へ使える長さを見ます。短いと把持量が不足します。</p></div></details>
+                </div>
                 <input id="anteriorLeaflet" data-plan-field="anteriorLeaflet" type="number" min="0" step="0.1" placeholder="grasp部位" />
               </div>
               <div>
-                <label for="posteriorLeaflet">後尖長 mm</label>
+                <div class="label-help-row">
+                  <label for="anteriorChordFreeZone" class="with-help">前尖chord-free zone mm</label>
+                  <details class="inline-help" data-help-field="anteriorChordFreeZone"><summary aria-label="前尖chord-free zoneの測定位置">?</summary><div class="inline-help-card text-only"><p><strong>前尖chord-free zone</strong><br>前尖の把持予定部位で、太い腱索が少なくclip armに安全に入れられる長さを見ます。短い場合はXT系よりNT系を優先し、腱索巻き込みを避けます。</p></div></details>
+                </div>
+                <input id="anteriorChordFreeZone" data-plan-field="anteriorChordFreeZone" type="number" min="0" step="0.1" placeholder="腱索の少ない把持長" />
+              </div>
+              <div>
+                <div class="label-help-row">
+                  <label for="posteriorLeaflet" class="with-help">後尖長 mm</label>
+                  <details class="inline-help" data-help-field="posteriorLeaflet"><summary aria-label="後尖長の測定位置">?</summary><div class="inline-help-card text-only"><p><strong>後尖長</strong><br>grasp予定部位で、自由縁から弁尖基部方向へ使える長さを見ます。後尖が短い病変ではclip保持に注意します。</p></div></details>
+                </div>
                 <input id="posteriorLeaflet" data-plan-field="posteriorLeaflet" type="number" min="0" step="0.1" placeholder="grasp部位" />
               </div>
               <div>
-                <label for="leafletInsertion">想定insertion mm</label>
+                <div class="label-help-row">
+                  <label for="posteriorChordFreeZone" class="with-help">後尖chord-free zone mm</label>
+                  <details class="inline-help" data-help-field="posteriorChordFreeZone"><summary aria-label="後尖chord-free zoneの測定位置">?</summary><div class="inline-help-card text-only"><p><strong>後尖chord-free zone</strong><br>後尖の把持予定部位で、太い腱索が少なくclip armに安全に入れられる長さを見ます。短い場合は把持量不足や腱索巻き込みに注意し、NT系や留置部位の再検討を優先します。</p></div></details>
+                </div>
+                <input id="posteriorChordFreeZone" data-plan-field="posteriorChordFreeZone" type="number" min="0" step="0.1" placeholder="腱索の少ない把持長" />
+              </div>
+              <div>
+                <div class="label-help-row">
+                  <label for="leafletInsertion" class="with-help">想定insertion mm</label>
+                  <details class="inline-help" data-help-field="leafletInsertion"><summary aria-label="leaflet insertionの測定位置">?</summary><div class="inline-help-card text-only"><p><strong>leaflet insertion</strong><br>clip arm上に入る弁尖長の見込みです。NT/NTWはおおむね6 mm以上、XT/XTWは9 mm以上を目安にします。</p></div></details>
+                </div>
                 <input id="leafletInsertion" data-plan-field="leafletInsertion" type="number" min="0" step="0.1" placeholder="NT系>=6 / XT系>=9" />
               </div>
               <div>
-                <label for="coaptationDepth">coaptation depth mm</label>
+                <div class="label-help-row">
+                  <label for="coaptationDepth" class="with-help">coaptation depth mm</label>
+                  <details class="inline-help" data-help-field="coaptationDepth"><summary aria-label="coaptation depthの測定位置">?</summary><div class="inline-help-card text-only"><p><strong>coaptation depth</strong><br>僧帽弁輪平面からcoaptation pointまでの深さです。二次性MRでtetheringが強いほど深くなります。</p></div></details>
+                </div>
                 <input id="coaptationDepth" data-plan-field="coaptationDepth" type="number" min="0" step="0.1" placeholder="二次性で重要" />
               </div>
               <div>
-                <label for="coaptationLength">coaptation length mm</label>
+                <div class="label-help-row">
+                  <label for="coaptationLength" class="with-help">coaptation length mm</label>
+                  <details class="inline-help" data-help-field="coaptationLength"><summary aria-label="coaptation lengthの測定位置">?</summary><div class="inline-help-card text-only"><p><strong>coaptation length</strong><br>前尖と後尖が重なっている長さです。短いとgraspが難しくなります。</p></div></details>
+                </div>
                 <input id="coaptationLength" data-plan-field="coaptationLength" type="number" min="0" step="0.1" placeholder="二次性で重要" />
               </div>
               <div>
-                <label for="flailGap">flail gap mm</label>
+                <div class="label-help-row">
+                  <label for="flailGap" class="with-help">flail gap mm</label>
+                  <details class="inline-help" data-help-field="flailGap"><summary aria-label="flail gapの測定位置">?</summary><div class="inline-help-card text-only"><p><strong>flail gap</strong><br>flail leaflet先端と対側弁尖接合点までの距離です。gapが大きいとXT系や複数clipを考えます。</p></div></details>
+                </div>
                 <input id="flailGap" data-plan-field="flailGap" type="number" min="0" step="0.1" placeholder="一次性で入力" />
               </div>
               <div>
-                <label for="flailWidth">flail width mm</label>
+                <div class="label-help-row">
+                  <label for="flailWidth" class="with-help">flail width mm</label>
+                  <details class="inline-help" data-help-field="flailWidth"><summary aria-label="flail widthの測定位置">?</summary><div class="inline-help-card text-only"><p><strong>flail width</strong><br>flailしている幅をcommissure方向に測ります。幅が広いとwide clipや複数clipを検討します。</p></div></details>
+                </div>
                 <input id="flailWidth" data-plan-field="flailWidth" type="number" min="0" step="0.1" placeholder="一次性で入力" />
               </div>
               <div>
-                <label for="mva">MVA cm2</label>
+                <div class="label-help-row">
+                  <label for="mva" class="with-help">MVA cm2</label>
+                  <details class="inline-help" data-help-field="mva"><summary aria-label="MVAの測定位置">?</summary><div class="inline-help-card text-only"><p><strong>MVA</strong><br>3D planimetryまたはPHTなどで僧帽弁口面積を確認します。小さい場合は術後MSリスクに注意します。</p></div></details>
+                </div>
                 <input id="mva" data-plan-field="mva" type="number" min="0" step="0.1" placeholder="理想 >=4.0" />
               </div>
               <div>
-                <label for="mvGradient">平均MV圧較差 mmHg</label>
+                <div class="label-help-row">
+                  <label for="mvGradient" class="with-help">平均MV圧較差 mmHg</label>
+                  <details class="inline-help" data-help-field="mvGradient"><summary aria-label="平均MV圧較差の測定位置">?</summary><div class="inline-help-card text-only"><p><strong>平均MV圧較差</strong><br>PW/CW Dopplerで僧帽弁流入の平均圧較差を測ります。心拍数とflow依存性も一緒に確認します。</p></div></details>
+                </div>
                 <input id="mvGradient" data-plan-field="mvGradient" type="number" min="0" step="0.1" placeholder="例: 2.5" />
               </div>
               <label class="checkline">
@@ -182,7 +273,7 @@
             </div>
           </div>
 
-          <div id="tricuspidPlanner" class="planner-body">
+          <div id="tricuspidPlanner" class="planner-body" hidden>
             <div class="form-grid">
               <div>
                 <label for="tvTarget">留置部位</label>
@@ -244,7 +335,7 @@
             </div>
           </div>
 
-          <div id="laaoPlanner" class="planner-body">
+          <div id="laaoPlanner" class="planner-body" hidden>
             <div class="form-grid">
               <div>
                 <label for="laaoDeviceFamily">デバイス</label>
@@ -285,7 +376,7 @@
             </div>
           </div>
 
-          <div id="tavrPlanner" class="planner-body">
+          <div id="tavrPlanner" class="planner-body" hidden>
             <div class="form-grid">
               <div>
                 <label for="tavrValveFamily">弁種</label>
@@ -334,7 +425,7 @@
             </div>
           </div>
 
-          <div id="septalPlanner" class="planner-body">
+          <div id="septalPlanner" class="planner-body" hidden>
             <div class="form-grid">
               <div>
                 <label for="septalType">閉鎖対象</label>
@@ -415,6 +506,17 @@
         <div class="items"></div>
       </article>
     </template>
+
+    <dialog id="helpDialog" class="help-dialog" aria-labelledby="helpTitle">
+      <div class="help-head">
+        <h2 id="helpTitle">測定ヘルプ</h2>
+        <button id="helpClose" class="icon-button" type="button" aria-label="閉じる">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>
+        </button>
+      </div>
+      <div id="helpFigure" class="help-figure"></div>
+      <p id="helpText" class="help-text"></p>
+    </dialog>
 
     <script src="app.js"></script>
   </body>
